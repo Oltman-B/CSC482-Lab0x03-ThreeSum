@@ -6,7 +6,9 @@ namespace Lab0x03
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var sandbox = new ThreeSumSandbox();
+
+            Console.WriteLine($"Tests passed? {sandbox.VerificationTests()}");
         }
     }
 }
