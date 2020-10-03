@@ -23,9 +23,11 @@ namespace Lab0x03
             List<int> noThreeSumTestList = new List<int> {900, 23, 43, 223, 33, 90, 11, 1001};
             if (!ContainsThreeSumBruteForce(threeSumTestList, 1000)) return false;
             if (!ContainsThreeSumBetter(threeSumTestList, 1000)) return false;
+            if (!ContainsThreeSumBest(threeSumTestList, 1000)) return false;
 
             if (ContainsThreeSumBruteForce(noThreeSumTestList, 1000)) return false;
             if (ContainsThreeSumBetter(noThreeSumTestList, 1000)) return false;
+            if (ContainsThreeSumBest(noThreeSumTestList, 1000)) return false;
 
             // All tests pass
             return true;
@@ -34,7 +36,8 @@ namespace Lab0x03
         private List<int> GenerateUniqueSet(int setLength, int min = Int32.MinValue, int max = Int32.MaxValue)
         {
             var tempSet = new HashSet<int>();
-            while (tempSet.Count < setLength)
+            // Account for scenario where range from min to max doesn't have enough values to cover setLength
+            while (tempSet.Count < Math.Min(setLength, max - min))
             {
                 tempSet.Add(_rand.Next(min, max));
             }
@@ -71,6 +74,25 @@ namespace Lab0x03
 
                     if (candidate < twoSumTarget) left++;
                     else right--;
+                }
+            }
+
+            return false;
+        }
+
+        private bool ContainsThreeSumBest(List<int> set, int target)
+        {
+            for (int i = 0; i < set.Count - 2; i++)
+            {
+                var tempSet = new HashSet<int>();
+                var twoSumTarget = target - set[i];
+                for (int j = i + 1; j < set.Count; j++)
+                {
+                    // check to see if twoSumTarget - current element is already in hash set
+                    // if it is, that means twoSumTarget + set[j] == target and we have a 3-sum value
+                    // otherwise, add current element to hash table and continue.
+                    if (tempSet.Contains(twoSumTarget - set[j])) return true;
+                    tempSet.Add(set[j]);
                 }
             }
 
