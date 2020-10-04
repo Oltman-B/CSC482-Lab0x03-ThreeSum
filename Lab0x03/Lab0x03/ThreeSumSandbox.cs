@@ -49,7 +49,7 @@ namespace Lab0x03
                 {
                     for (int k = j + 1; k < set.Count; k++)
                     {
-                        if (set[i] + set[j] + set[k] == target) continue; //TODO(Baruch) return true;
+                        if (set[i] + set[j] + set[k] == target) return true;
                     }
                 }
             }
