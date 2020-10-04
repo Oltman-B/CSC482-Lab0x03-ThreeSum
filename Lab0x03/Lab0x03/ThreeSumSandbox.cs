@@ -16,8 +16,10 @@ namespace Lab0x03
         {
             var benchmarker = new AlgorithmBenchmarker();
             benchmarker.AddAlgorithmToBenchmark(ContainsThreeSumBruteForce, BruteForceDoublingRatioCalculator);
+            benchmarker.AddAlgorithmToBenchmark(ContainsThreeSumALittleBetter, ALittleBetterDoublingRatioCalculator);
             benchmarker.AddAlgorithmToBenchmark(ContainsThreeSumBetter, BetterDoublingRatioCalculator);
             benchmarker.AddAlgorithmToBenchmark(ContainsThreeSumBest, BestDoublingRatioCalculator);
+            
 
             benchmarker.RunTimeTests();
         }
@@ -27,12 +29,14 @@ namespace Lab0x03
             // Test expected true results
             List<int> threeSumTestList = new List<int> {900, 23, 43, 223, 33, 90, 10, 1001};
             if (!ContainsThreeSumBruteForce(threeSumTestList, 1000)) return false;
+            if (!ContainsThreeSumALittleBetter(threeSumTestList, 1000)) return false;
             if (!ContainsThreeSumBetter(threeSumTestList, 1000)) return false;
             if (!ContainsThreeSumBest(threeSumTestList, 1000)) return false;
 
             // Test expected false results
             List<int> noThreeSumTestList = new List<int> {900, 23, 43, 223, 33, 90, 11, 1001};
             if (ContainsThreeSumBruteForce(noThreeSumTestList, 1000)) return false;
+            if (ContainsThreeSumALittleBetter(noThreeSumTestList, 1000)) return false;
             if (ContainsThreeSumBetter(noThreeSumTestList, 1000)) return false;
             if (ContainsThreeSumBest(noThreeSumTestList, 1000)) return false;
 
@@ -55,7 +59,6 @@ namespace Lab0x03
             }
             return false;
         }
-
         private void BruteForceDoublingRatioCalculator(long n, AlgStats stats)
         {
             if (n <= 2)
@@ -68,6 +71,38 @@ namespace Lab0x03
             stats.ExpectedDoublingRatio = (n * n * n) / (((double)n / 2) * ((double)n / 2) * ((double)n / 2));
             stats.ActualDoublingRatio = stats.TimeMicro / stats.PrevTimeMicro;
         }
+        private bool ContainsThreeSumALittleBetter(List<int> set, int target)
+        {
+            set.Sort();
+
+            for (int i = 0; i < set.Count - 1; i++)
+            {
+                for (int j = i + 1; j < set.Count; j++)
+                {
+                    if (set.BinarySearch(target - (set[i] + set[j])) > -1)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+        private void ALittleBetterDoublingRatioCalculator(long n, AlgStats stats)
+        {
+            if (n <= 2)
+            {
+                stats.ExpectedDoublingRatio = -1;
+                stats.ActualDoublingRatio = -1;
+                return;
+            }
+
+            stats.ExpectedDoublingRatio = (n * n * Math.Log2(n)) / (((double) n / 2) * ((double)n / 2) * (Math.Log2((double)n/2)));
+            stats.ActualDoublingRatio = stats.TimeMicro / stats.PrevTimeMicro;
+        }
+
+        
+ 
 
         private bool ContainsThreeSumBetter(List<int> set, int target)
         {
@@ -102,7 +137,7 @@ namespace Lab0x03
                 return;
             }
 
-            stats.ExpectedDoublingRatio = (n * n * Math.Log2(n)) / (((double) n / 2) * ((double)n / 2) * (Math.Log2((double)n/2)));
+            stats.ExpectedDoublingRatio = (n * n) / ((double) n / 2 * n / 2);
             stats.ActualDoublingRatio = stats.TimeMicro / stats.PrevTimeMicro;
         }
 
