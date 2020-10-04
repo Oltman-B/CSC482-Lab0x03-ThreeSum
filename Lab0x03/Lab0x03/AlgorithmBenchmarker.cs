@@ -36,12 +36,12 @@ namespace Lab0x03
 
         // To use benchmarker, simply define the delegate with the signature of your algorithm to test and also the data
         // source it will use.
-        internal delegate bool Algorithm<T>(List<int> dataSource, int target);
+        internal delegate bool Algorithm(List<int> dataSource, int target);
         // The algorithms are responsible for defining their own doubling ratio calculator
         internal delegate void DoublingCalculator(long n, AlgStats stats);
 
         // This concrete AlgorithmBenchmark implementation will operate on a list of integers
-        private List<Algorithm<List<int>>> _algorithms = new List<Algorithm<List<int>>>();
+        private List<Algorithm> _algorithms = new List<Algorithm>();
         private List<DoublingCalculator> _doublingCalculators = new List<DoublingCalculator>();
 
         // This is just the data generator used for this particular implementation. This should be abstracted
@@ -63,7 +63,7 @@ namespace Lab0x03
         // Called from within the scope of your algorithms instantiation, simply pass the algorithm function name
         // and the doublingcalculator function name as parameters. Call RunTimeTests to run each algorithm added
         // and display statistics based on doubling calculator.
-        public void AddAlgorithmToBenchmark(Algorithm<List<int>> algorithm, DoublingCalculator doublingCalc)
+        public void AddAlgorithmToBenchmark(Algorithm algorithm, DoublingCalculator doublingCalc)
         {
             _algorithms.Add(algorithm);
             _doublingCalculators.Add(doublingCalc);
@@ -79,7 +79,7 @@ namespace Lab0x03
             }
         }
 
-        private void AlgorithmTestRuntime<T>(Algorithm<T> algorithm, DoublingCalculator doublingCalc)
+        private void AlgorithmTestRuntime(Algorithm algorithm, DoublingCalculator doublingCalc)
         {
             PrintHeader(algorithm);
 
@@ -114,7 +114,7 @@ namespace Lab0x03
 
         // Should be abstracted out so that column names etc, can be passed and this function doesn't have
         // to be modified in source code.
-        private void PrintHeader<T>(Algorithm<T> algorithm)
+        private void PrintHeader(Algorithm algorithm)
         {
             Console.WriteLine($"Starting run-time tests for {algorithm.Method.Name}...\n");
             Console.WriteLine(
@@ -123,7 +123,7 @@ namespace Lab0x03
                 "N\t\t\t       Time|    | Actual  | Expected |");
         }
 
-        private void PrintAlgorithmTerminationMessage<T>(Algorithm<T> algorithm)
+        private void PrintAlgorithmTerminationMessage(Algorithm algorithm)
         {
             Console.WriteLine($"{algorithm.Method.Name} exceeded allotted time, terminating...\n");
         }
