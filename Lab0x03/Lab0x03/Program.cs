@@ -8,7 +8,16 @@ namespace Lab0x03
         {
             var sandbox = new ThreeSumSandbox();
 
-            Console.WriteLine($"Tests passed? {sandbox.VerificationTests()}");
+            //if (sandbox.VerificationTests())
+            //{
+             //   Console.WriteLine("Tests passed!");
+                sandbox.RunTimeTests();
+           // }
+            //else
+           // {
+            //    Console.WriteLine("Something went wrong in the verification tests... :(");
+           // }
+            
         }
     }
 }

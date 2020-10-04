@@ -14,7 +14,12 @@ namespace Lab0x03
 
         public void RunTimeTests()
         {
-            var nextList = GenerateUniqueSet(300);
+            var benchmarker = new AlgorithmBenchmarker();
+            benchmarker.AddAlgorithmToBenchmark(ContainsThreeSumBruteForce, BruteForceDoublingRatioCalculator);
+            benchmarker.AddAlgorithmToBenchmark(ContainsThreeSumBetter, BetterDoublingRatioCalculator);
+            benchmarker.AddAlgorithmToBenchmark(ContainsThreeSumBest, BestDoublingRatioCalculator);
+
+            benchmarker.RunTimeTests();
         }
 
         public bool VerificationTests()
@@ -35,19 +40,6 @@ namespace Lab0x03
             return true;
         }
 
-        private List<int> GenerateUniqueSet(int setLength, int min = Int32.MinValue, int max = Int32.MaxValue)
-        {
-            // Use .Net HashSet, which does not store duplicates, to generate a unique set and return as list.
-            var tempSet = new HashSet<int>();
-            // Account for scenario where range from min to max doesn't have enough values to cover setLength
-            while (tempSet.Count < Math.Min(setLength, max - min))
-            {
-                tempSet.Add(_rand.Next(min, max));
-            }
-
-            return tempSet.ToList();
-        }
-
         private bool ContainsThreeSumBruteForce(List<int> set, int target)
         {
             // brute force, check all n^3 combinations and return if the 3 elements ever sum to target.
@@ -57,11 +49,24 @@ namespace Lab0x03
                 {
                     for (int k = j + 1; k < set.Count; k++)
                     {
-                        if (set[i] + set[j] + set[k] == target) return true;
+                        if (set[i] + set[j] + set[k] == target) continue; //TODO(Baruch) return true;
                     }
                 }
             }
             return false;
+        }
+
+        private void BruteForceDoublingRatioCalculator(long n, AlgStats stats)
+        {
+            if (n <= 2)
+            {
+                stats.ExpectedDoublingRatio = -1;
+                stats.ActualDoublingRatio = -1;
+                return;
+            }
+
+            stats.ExpectedDoublingRatio = (n * n * n) / (((double)n / 2) * ((double)n / 2) * ((double)n / 2));
+            stats.ActualDoublingRatio = stats.TimeMicro / stats.PrevTimeMicro;
         }
 
         private bool ContainsThreeSumBetter(List<int> set, int target)
@@ -88,6 +93,19 @@ namespace Lab0x03
             return false;
         }
 
+        private void BetterDoublingRatioCalculator(long n, AlgStats stats)
+        {
+            if (n <= 2)
+            {
+                stats.ExpectedDoublingRatio = -1;
+                stats.ActualDoublingRatio = -1;
+                return;
+            }
+
+            stats.ExpectedDoublingRatio = (n * n * Math.Log2(n)) / (((double) n / 2) * ((double)n / 2) * (Math.Log2((double)n/2)));
+            stats.ActualDoublingRatio = stats.TimeMicro / stats.PrevTimeMicro;
+        }
+
         private bool ContainsThreeSumBest(List<int> set, int target)
         {
             // fastest implementation. Does not use sort, but still only iterates through N^2 elements.
@@ -108,6 +126,19 @@ namespace Lab0x03
             }
 
             return false;
+        }
+
+        private void BestDoublingRatioCalculator(long n, AlgStats stats)
+        {
+            if (n <= 2)
+            {
+                stats.ExpectedDoublingRatio = -1;
+                stats.ActualDoublingRatio = -1;
+                return;
+            }
+
+            stats.ExpectedDoublingRatio = (n * n) / ((double) n / 2 * n / 2);
+            stats.ActualDoublingRatio = stats.TimeMicro / stats.PrevTimeMicro;
         }
     }
 }
