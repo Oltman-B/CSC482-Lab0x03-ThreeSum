@@ -11,7 +11,7 @@ namespace Lab0x03
             return BinarySearch(@this, target, 0, @this.Count - 1);
         }
 
-        public static int BinarySearch(List<int> list, int target, int left, int right)
+        private static int BinarySearch(List<int> list, int target, int left, int right)
         {
             while (left <= right)
             {
